@@ -25,10 +25,10 @@ Step (3) is written in the R programming language and relies on the `mice` packa
 
 # Running the Code
 
- * Step (1): see the notebook `get_eia_demand_data.ipynb`. You will need to acquire an API key from the EIA. Additional
+ * Step (1): see the Jupyter notebook `get_eia_demand_data.ipynb`. You will need to acquire an API key from the EIA. Additional
 documentation is provided in the [notebook](https://github.com/truggles/EIA_Cleaned_Hourly_Electricity_Demand_Code/blob/master/get_eia_demand_data.ipynb).
- * Step (2): see the notebook `anomaly_screening.ipynb`. For a full description of the algorithms and their motivation see the paper.
- * Step (3): see the notebooke `XXX FIXME` ...
+ * Step (2): see the Jupyter notebook `anomaly_screening.ipynb`. For a full description of the algorithms and their motivation see the paper.
+ * Step (3): see the R Markdown notebooke `MICE_step.Rmd`
 
 # Reproducibility
 
