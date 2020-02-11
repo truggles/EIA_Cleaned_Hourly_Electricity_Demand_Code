@@ -30,6 +30,23 @@ documentation is provided in the [notebook](https://github.com/truggles/EIA_Clea
  * Step (2): see the Jupyter notebook `anomaly_screening.ipynb`. For a full description of the algorithms and their motivation see the paper.
  * Step (3): see the R Markdown notebook `MICE_step.Rmd`
 
+# Completing Step (3)
+
+The following three steps will help you to run the MICE imputation Markdown script (MICE_Step.Rmd) if you are unfamiliar with R and RMarkdown.
+
+(a) Download and install R at https://cran.rstudio.com/
+(b) Download the free version of RStudio at https://rstudio.com/products/rstudio/download/
+(c) Open MICE_Step.Rmd in Rstudio and “Run All”\*
+
+
+\*lines 167 and 173 control the amount of parallel computing that this code will attempt. Currently the code is set up to compute 4 chains on each of 4 processing cores. If your computer does not have 4 cores available and/or you would like to only use 1 or 2 cores to run this code, then you will need to change the code to one of the following:
+
+- 16 chains on 1 core (no parallel computing):
+Change line 167 to “n.imp.core = 16,” and line 173 to “n.core = 1,”
+
+- 8 chains on 2 cores:
+Change line 167 to “n.imp.core = 8,” and line 173 to “n.core = 2,”
+
 # Reproducibility
 
 Achieving exact reproducibility with the published results is difficult because the EIA continuously update
