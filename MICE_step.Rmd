@@ -23,8 +23,8 @@ csv_MASTER <- read.csv(impute_file_path)
 
 
 # we want to start on July 2nd, 2015 and end on the 1st of July of the last year
-csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(time) > "2015-07-01" &
-                                          as.Date(time) < paste0(year_updated, "-07-02"))
+csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) > "2015-07-01" &
+                                          as.Date(date_time) < paste0(year_updated, "-07-02"))
 
 
 
@@ -41,8 +41,8 @@ pre_imputed_data = csv_MASTER %>% dplyr::select(-contains('_category'),
                                                 -SEC)
 
 # take the log of the hourly demand data
-data_wide_logged = data.frame(time = pre_imputed_data$time,
-                              pre_imputed_data %>% dplyr::select(-time) %>% apply(MARGIN = 2, FUN = function(x) log(x)))
+data_wide_logged = data.frame(date_time = pre_imputed_data$date_time,
+                              pre_imputed_data %>% dplyr::select(-date_time) %>% apply(MARGIN = 2, FUN = function(x) log(x)))
 
 
 
@@ -55,9 +55,9 @@ data_wide_logged = data.frame(time = pre_imputed_data$time,
 # (4) rename the concurrent demand values to predict 
 
 data_pre_impute0 =  data_wide_logged %>% data.table() %>%
-                                         melt(, id.vars = c('time'), variable.name = "BA") %>% 
-                                         dplyr::mutate(doy = lubridate::yday(time),
-                                                       hour = lubridate::hour(time)) %>%
+                                         melt(, id.vars = c('date_time'), variable.name = "BA") %>% 
+                                         dplyr::mutate(doy = lubridate::yday(date_time),
+                                                       hour = lubridate::hour(date_time)) %>%
                                          dplyr::mutate(original = 1)
 
 
@@ -65,15 +65,15 @@ leap_years = c(2016,2020,2024)
 # tack on data to the front and back to remove the edge effects at the beginning and the end of each year
 data_pre_impute_tack_front_end = data_pre_impute0 %>% dplyr::filter(doy <= (15-1)/2) %>%
                                                       dplyr::mutate(original = 0,
-                                                                    doy = ifelse(lubridate::year(time) %in% c(leap_years),
+                                                                    doy = ifelse(lubridate::year(date_time) %in% c(leap_years),
                                                                                  doy + 366,
                                                                                  doy + 365))
 
-data_pre_impute_tack_back_end = data_pre_impute0 %>% dplyr::filter(ifelse(lubridate::year(time) %in% c(leap_years), 
+data_pre_impute_tack_back_end = data_pre_impute0 %>% dplyr::filter(ifelse(lubridate::year(date_time) %in% c(leap_years), 
                                                                           doy > 366 - (15-1)/2,
                                                                           doy > 365 - (15-1)/2)) %>%
                                                      dplyr::mutate(original = 0,
-                                                                   doy = ifelse(lubridate::year(time) %in% c(leap_years),
+                                                                   doy = ifelse(lubridate::year(date_time) %in% c(leap_years),
                                                                                 doy - 366,
                                                                                 doy - 365))
                                                                    
@@ -91,16 +91,16 @@ data_pre_impute = rbind(data_pre_impute_tack_front_end,
                                                              na.rm = TRUE,
                                                              partial = TRUE))  %>%
                   dplyr::filter(original == 1) %>%
-                  dplyr::arrange(BA,time) %>%
+                  dplyr::arrange(BA,date_time) %>%
                   dplyr::group_by(BA) %>%
                   dplyr::mutate(demand_lag1 = lag(value, na.rm = TRUE),
                                 demand_lead1 = lead(value, na.rm = TRUE),
-                                time = as.POSIXct(time, tryFormats = c("%Y-%m-%d %H:%M"), tz = 'UTC')) %>%
+                                date_time = as.POSIXct(date_time, tryFormats = c("%Y-%m-%d %H:%M"), tz = 'UTC')) %>%
                   ungroup() %>%
   dplyr::select(-doy, -hour, -original)
 
 # # save this for later use of the demand_clim_mean variable during the over imputation stage
-# clim_var_to_save = data_pre_impute %>% dplyr::select(time, BA, demand_clim_mean)
+# clim_var_to_save = data_pre_impute %>% dplyr::select(date_time, BA, demand_clim_mean)
 # save(clim_var_to_save, 
 #      file = 'Google Drive/MICE_Impute_EIA_Demand_Data/Clim_var/demand_clim_mean_Jan15.RData')
 # rm(clim_var_to_save)
@@ -113,20 +113,20 @@ data_pre_impute = data_pre_impute %>% dplyr::mutate(BA_clim_mean_label = paste0(
 
 
 # construct the prediction matrix -- components are (1) the raw data, (2) the climatological mean for each region, (3) lag1 for each region, (4) lead1 for each region
-data_pre_impute_wide = merge(merge(merge(reshape2::dcast(data = data_pre_impute, time ~ BA_concurrent_label, value.var = 'value', fun = mean),
-                                         reshape2::dcast(data = data_pre_impute, time ~ BA_clim_mean_label, value.var = 'demand_clim_mean', fun = mean),
-                                         by = 'time'),
-                                   reshape2::dcast(data = data_pre_impute, time ~ BA_lag1_label, value.var = 'demand_lag1', fun = mean),
-                                   by = 'time'),
-                             reshape2::dcast(data = data_pre_impute, time ~ BA_lead1_label, value.var = 'demand_lead1', fun = mean),
-                             by = 'time')
+data_pre_impute_wide = merge(merge(merge(reshape2::dcast(data = data_pre_impute, date_time ~ BA_concurrent_label, value.var = 'value', fun = mean),
+                                         reshape2::dcast(data = data_pre_impute, date_time ~ BA_clim_mean_label, value.var = 'demand_clim_mean', fun = mean),
+                                         by = 'date_time'),
+                                   reshape2::dcast(data = data_pre_impute, date_time ~ BA_lag1_label, value.var = 'demand_lag1', fun = mean),
+                                   by = 'date_time'),
+                             reshape2::dcast(data = data_pre_impute, date_time ~ BA_lead1_label, value.var = 'demand_lead1', fun = mean),
+                             by = 'date_time')
 
 
 
 
 
 # let's adjust the predictor matrix
-pred_mat = make.predictorMatrix(data_pre_impute_wide %>% dplyr::select(-time))
+pred_mat = make.predictorMatrix(data_pre_impute_wide %>% dplyr::select(-date_time))
 
 
 # (1) only use a var's own lag1 var to impute that var
@@ -161,9 +161,8 @@ pred_mat[grep(x = row.names(pred_mat), pattern = '_clim_mean'),] = 0
 
 # This code currently uses 4 cores to parallelize MICE
 # This should be changed depending on the number of cores your machine has
-time_now_check = proc.time()
 # impute with mice
-data_imp_mice_lag_embed_par = parlmice(data = data_pre_impute_wide %>% dplyr::select(-time),
+data_imp_mice_lag_embed_par = parlmice(data = data_pre_impute_wide %>% dplyr::select(-date_time),
                                        n.imp.core = 4,
                                        maxit = 10,
                                        predictorMatrix = pred_mat,
@@ -173,7 +172,6 @@ data_imp_mice_lag_embed_par = parlmice(data = data_pre_impute_wide %>% dplyr::se
                                        n.core = 4,
                                        remove_collinear = FALSE,
                                        maxcor = 0.9999999)
-proc.time() - time_now_check
 
 dir.create('MICE_output')
 
@@ -185,7 +183,7 @@ dev.off()
 
 
 for(iimp in 1:16){
-    mice_lag_embed_imputations_temp = data.frame(time = data_pre_impute_wide$time,
+    mice_lag_embed_imputations_temp = data.frame(date_time = data_pre_impute_wide$date_time,
                                                  complete(data_imp_mice_lag_embed_par, iimp) %>% dplyr::select(names(data_pre_impute_wide)[-1])) %>%
                                       dplyr::mutate(imp_index = iimp)
 
@@ -199,13 +197,13 @@ mice_lag_embed_imputations = mice_lag_embed_imputations %>% dplyr::select(-conta
             .funs = funs(sub("[_]conc$", "", .)))
 
 # save the mean of all imputations as integer values
-mice_lag_embed_imputations_summarized = mice_lag_embed_imputations %>% melt(, id.vars = c('time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
+mice_lag_embed_imputations_summarized = mice_lag_embed_imputations %>% melt(, id.vars = c('date_time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
   as.data.table() %>%
-  dplyr::group_by(time, BA) %>% 
+  dplyr::group_by(date_time, BA) %>% 
   dplyr::summarise(demand = as.integer(round(mean(exp(demand), na.rm = TRUE),0))) %>%
   ungroup()
 
-mice_lag_embed_imputations_summarized_wide = mice_lag_embed_imputations_summarized %>% reshape2::dcast(time ~ BA, value.var = 'demand', fun = mean)
+mice_lag_embed_imputations_summarized_wide = mice_lag_embed_imputations_summarized %>% reshape2::dcast(date_time ~ BA, value.var = 'demand', fun = mean)
 
 # save the mean of all MICE chains
 write.csv(x = mice_lag_embed_imputations_summarized_wide,
@@ -213,13 +211,13 @@ write.csv(x = mice_lag_embed_imputations_summarized_wide,
 
 
 # save all imputations as integer values
-mice_lag_embed_imputations_all = mice_lag_embed_imputations %>% melt(, id.vars = c('time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
+mice_lag_embed_imputations_all = mice_lag_embed_imputations %>% melt(, id.vars = c('date_time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
   as.data.table() %>%
-  dplyr::group_by(time, BA, imp_index) %>% 
+  dplyr::group_by(date_time, BA, imp_index) %>% 
   dplyr::mutate(demand = as.integer(round(exp(demand),0))) %>%
   ungroup()
 
-mice_lag_embed_imputations_all_wide = mice_lag_embed_imputations_all %>% reshape2::dcast(time + imp_index ~ BA, value.var = 'demand', fun = mean)
+mice_lag_embed_imputations_all_wide = mice_lag_embed_imputations_all %>% reshape2::dcast(date_time + imp_index ~ BA, value.var = 'demand', fun = mean)
 
 # save the individual MICE chains
 write.csv(x = mice_lag_embed_imputations_all_wide,
