@@ -14,10 +14,11 @@ The notebooks in this repository can be used to reproduce the workflow used to:
  * Step (1) Query the EIA database for raw demand data
  * Step (2) Screen the data for anomalous values
  * Step (3) Impute missing and anomalous values with the Multiple Imputation by Chained Equations (MICE) procedure
+ * Step (4) Distribute the imputed results to balancing authority-level files as well as regional, interconnect, and CONUS level aggregates
 
 # Required Packages
 
-Steps (1) and (2) are based on python code, were written in `python3.7`, and use the following additional packages:
+Steps (1), (2), and (4) are based on python code, were written in `python3.7`, and use the following additional packages:
  * `pandas`
  * `numpy`
 
@@ -29,6 +30,7 @@ Step (3) is written in the R programming language and relies on the `mice` packa
 documentation is provided in the [notebook](https://github.com/truggles/EIA_Cleaned_Hourly_Electricity_Demand_Code/blob/master/get_eia_demand_data.ipynb).
  * Step (2): see the Jupyter notebook `anomaly_screening.ipynb`. For a full description of the algorithms and their motivation see the paper.
  * Step (3): see the R Markdown notebook `MICE_step.Rmd`
+ * Step (4): see the Jupyter notebook `distribute_MICE_results.ipynb`. This code distributes and aggregates the results as seen in the published content [here](https://zenodo.org/record/3517197).
 
 # Completing Step (3)
 
@@ -49,10 +51,11 @@ Change line 167 to "n.imp.core = 8," and line 173 to "n.core = 2,"
 
 # Reproducibility
 
-Achieving exact reproducibility with the published results is difficult because the EIA continuously update
-their database as balancing authorities provide new and updated information. Therefore, querrying the database
-today and tomorrow could yield different results not just for the last 24 hours, but for past values
-that have been corrected.
+To achieve exact reproducibility with the published results a user should:
+ * Instead of querying EIA for data for Step (1), you will use the 10 September 2019 files used for the original analysis. Download the Zenodo repository archived [here](https://zenodo.org/record/3517197) XXX UPDATE DOI
+ * Adjust the initial flags and data path in the second code cell of `anomaly_screening.ipynb` to point to the archived files and run Step (2)
+ * Run Step (3)
+ * Adjust the initial flags and data path in the second code cell of `distribute_MICE_results.ipynb` to point to the archived files and run Step (4)
+ * Compare results
 
-To reproduce the exact results of the paper, please see the raw data used in the analysis, which is
-retained in the Zenodo repository linked above.
+Because EIA will update historical data values if a balancing authority requests this, it is possible for historical values to change altering the final results. Altered values will change the regressions performend in the MICE step leading to different imputed values for all imputed entries.
