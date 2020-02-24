@@ -1,11 +1,9 @@
 # EIA_Cleaned_Hourly_Electricity_Demand_Code
 Code associated with the U.S. Energy Information Administration (EIA) demand data anomaly screening and imputation project.
 
-See the GitHub data repository for additional documentation: <https://github.com/truggles/EIA_Cleaned_Hourly_Electricity_Demand_Data/>
+Find archived versions of this code at: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3678855.svg)](https://doi.org/10.5281/zenodo.3678855)
 
-If using the cleaned data, please cite:
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3517197.svg)](https://doi.org/10.5281/zenodo.3517197)
+Find the resulting cleaned data at: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3517197.svg)](https://doi.org/10.5281/zenodo.3517197)
 
 
 # Code Description
@@ -59,3 +57,8 @@ To achieve exact reproducibility with the published results a user should:
  * Compare results
 
 Because EIA will update historical data values if a balancing authority requests this, it is possible for historical values to change altering the final results. Altered values will change the regressions performend in the MICE step leading to different imputed values for all imputed entries.
+
+## Package Versions
+
+The exact environment used when cleaning and imputing the EIA data is saved in the file `package-list.txt`. The environment was created and managed using
+Conda.
