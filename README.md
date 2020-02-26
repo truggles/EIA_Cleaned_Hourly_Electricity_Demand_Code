@@ -22,6 +22,8 @@ Steps (1), (2), and (4) are based on python code, were written in `python3.7`, a
 
 Step (3) is written in the R programming language and relies on the `mice` package
 
+The exact environment used when cleaning and imputing the EIA data is saved in the file `package-list.txt`. The environment was created and managed using Conda.
+
 # Running the Code
 
  * Step (1): see the Jupyter notebook `get_eia_demand_data.ipynb`. You will need to acquire an API key from the EIA. Additional
@@ -52,13 +54,11 @@ Change line 167 to "n.imp.core = 8," and line 173 to "n.core = 2,"
 To achieve exact reproducibility with the published results a user should:
  * Instead of querying EIA for data for Step (1), you will use the 10 September 2019 files used for the original analysis. Download the Zenodo repository archived [here](https://zenodo.org/record/3517197) XXX UPDATE DOI
  * Adjust the initial flags and data path in the second code cell of `anomaly_screening.ipynb` to point to the archived files and run Step (2)
- * Run Step (3)
+ * Run Step (3):
+   * Running Step (3) using RStudio is probably simpler.  However, we have verified that exact reproduciblity is achieved running `MICE_step.Rmd` from the command line based on the Conda environment saved in `package-list.txt`.
+   * From the command line, run: ```R -e "rmarkdown::render('MICE_step.Rmd',output_file='output.html')"```
  * Adjust the initial flags and data path in the second code cell of `distribute_MICE_results.ipynb` to point to the archived files and run Step (4)
  * Compare results
 
 Because EIA will update historical data values if a balancing authority requests this, it is possible for historical values to change altering the final results. Altered values will change the regressions performend in the MICE step leading to different imputed values for all imputed entries.
 
-## Package Versions
-
-The exact environment used when cleaning and imputing the EIA data is saved in the file `package-list.txt`. The environment was created and managed using
-Conda.
