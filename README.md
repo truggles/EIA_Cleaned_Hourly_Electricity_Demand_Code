@@ -1,9 +1,9 @@
 # EIA_Cleaned_Hourly_Electricity_Demand_Code
 Code associated with the U.S. Energy Information Administration (EIA) demand data anomaly screening and imputation project.
 
-Find archived versions of this code at: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3678855.svg)](https://doi.org/10.5281/zenodo.3678855)
+Find archived versions of this code at: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3678854.svg)](https://doi.org/10.5281/zenodo.3678854)
 
-Find the resulting cleaned data at: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3517197.svg)](https://doi.org/10.5281/zenodo.3517197)
+Find the resulting cleaned data at: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3517196.svg)](https://doi.org/10.5281/zenodo.3517196)
 
 
 # Code Description
