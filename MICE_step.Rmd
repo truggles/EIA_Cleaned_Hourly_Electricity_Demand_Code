@@ -11,9 +11,8 @@ library(zoo)
 library(mice)
 library(parallel)
 
-version = 'v1'
 
-impute_file_path = paste0("data/csv_MASTER_",version,".csv")
+impute_file_path = paste0("data/csv_MASTER.csv")
 
 year_updated = 2019
 
@@ -55,7 +54,7 @@ data_wide_logged = data.frame(date_time = pre_imputed_data$date_time,
 # (4) rename the concurrent demand values to predict 
 
 data_pre_impute0 =  data_wide_logged %>% data.table() %>%
-                                         melt(, id.vars = c('date_time'), variable.name = "BA") %>% 
+                                         data.table::melt(, id.vars = c('date_time'), variable.name = "BA") %>% 
                                          dplyr::mutate(doy = lubridate::yday(date_time),
                                                        hour = lubridate::hour(date_time)) %>%
                                          dplyr::mutate(original = 1)
@@ -99,11 +98,6 @@ data_pre_impute = rbind(data_pre_impute_tack_front_end,
                   ungroup() %>%
   dplyr::select(-doy, -hour, -original)
 
-# # save this for later use of the demand_clim_mean variable during the over imputation stage
-# clim_var_to_save = data_pre_impute %>% dplyr::select(date_time, BA, demand_clim_mean)
-# save(clim_var_to_save, 
-#      file = 'Google Drive/MICE_Impute_EIA_Demand_Data/Clim_var/demand_clim_mean_Jan15.RData')
-# rm(clim_var_to_save)
 
 
 data_pre_impute = data_pre_impute %>% dplyr::mutate(BA_clim_mean_label = paste0(BA, '_clim_mean'),
@@ -197,7 +191,7 @@ mice_lag_embed_imputations = mice_lag_embed_imputations %>% dplyr::select(-conta
             .funs = funs(sub("[_]conc$", "", .)))
 
 # save the mean of all imputations as integer values
-mice_lag_embed_imputations_summarized = mice_lag_embed_imputations %>% melt(, id.vars = c('date_time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
+mice_lag_embed_imputations_summarized = mice_lag_embed_imputations %>% data.table::melt(, id.vars = c('date_time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
   as.data.table() %>%
   dplyr::group_by(date_time, BA) %>% 
   dplyr::summarise(demand = as.integer(round(mean(exp(demand), na.rm = TRUE),0))) %>%
@@ -211,7 +205,7 @@ write.csv(x = mice_lag_embed_imputations_summarized_wide,
 
 
 # save all imputations as integer values
-mice_lag_embed_imputations_all = mice_lag_embed_imputations %>% melt(, id.vars = c('date_time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
+mice_lag_embed_imputations_all = mice_lag_embed_imputations %>% data.table::melt(, id.vars = c('date_time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
   as.data.table() %>%
   dplyr::group_by(date_time, BA, imp_index) %>% 
   dplyr::mutate(demand = as.integer(round(exp(demand),0))) %>%
