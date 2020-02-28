@@ -10,6 +10,7 @@ library(data.table)
 library(zoo)
 library(mice)
 library(parallel)
+library(reshape2)
 
 
 impute_file_path = paste0("data/csv_MASTER.csv")
@@ -187,11 +188,10 @@ for(iimp in 1:16){
 }
 
 mice_lag_embed_imputations = mice_lag_embed_imputations %>% dplyr::select(-contains('_lag1'), -contains('lead1'), -contains('clim_mean')) %>% 
-  rename_at(.vars = vars(ends_with("_conc")),
-            .funs = funs(sub("[_]conc$", "", .)))
+                                                            setNames(sub("_conc", "", names(.)))
 
 # save the mean of all imputations as integer values
-mice_lag_embed_imputations_summarized = mice_lag_embed_imputations %>% data.table::melt(, id.vars = c('date_time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
+mice_lag_embed_imputations_summarized = mice_lag_embed_imputations %>% reshape2::melt(, id.vars = c('date_time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
   as.data.table() %>%
   dplyr::group_by(date_time, BA) %>% 
   dplyr::summarise(demand = as.integer(round(mean(exp(demand), na.rm = TRUE),0))) %>%
@@ -205,7 +205,7 @@ write.csv(x = mice_lag_embed_imputations_summarized_wide,
 
 
 # save all imputations as integer values
-mice_lag_embed_imputations_all = mice_lag_embed_imputations %>% data.table::melt(, id.vars = c('date_time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
+mice_lag_embed_imputations_all = mice_lag_embed_imputations %>% reshape2::melt(, id.vars = c('date_time', 'imp_index'), variable.name = 'BA', value.name = 'demand') %>%
   as.data.table() %>%
   dplyr::group_by(date_time, BA, imp_index) %>% 
   dplyr::mutate(demand = as.integer(round(exp(demand),0))) %>%
