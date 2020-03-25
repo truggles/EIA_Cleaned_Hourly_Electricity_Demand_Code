@@ -524,7 +524,7 @@ def make_anomaly_summary(df_dict):
 
     type_count = {}
     type_count["name"] = []
-    type_count["meadian_demand"] = []
+    type_count["median_demand"] = []
     TYPEs = [
         "OKAY",
         "MISSING",
@@ -546,13 +546,15 @@ def make_anomaly_summary(df_dict):
         median_demand = df["demand_MW"].median()
         if median_demand > 0:
             median_demand = round(median_demand, 2)
-        type_count["mean_demand"].append(median_demand)
+        type_count["median_demand"].append(median_demand)
 
         for TYPE in TYPEs:
-            #         s = np.where(df == TYPE, 1, 0).sum()
             s = (df["category"] == TYPE).sum()
             type_count[TYPE].append(s)
 
     anomaly_summary = pd.DataFrame(type_count).sort_values("name")
+    anomaly_summary["pct_OKAY"] = anomaly_summary["OKAY"] / anomaly_summary[TYPEs].sum(
+        axis=1
+    )
 
     return anomaly_summary
