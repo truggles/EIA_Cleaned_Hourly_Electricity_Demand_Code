@@ -412,6 +412,7 @@ def filter_anomalous_regions(df, width, anomalous_pct):
 
 
 def screen_timeseries(
+    name,
     df,
     short_hour_window,
     iqr_hours,
@@ -506,15 +507,17 @@ def screen_timeseries(
     # (anomalous regions filter)
     df = filter_anomalous_regions(df, anomalous_regions_width, anomalous_pct)
 
-    # Save as csv for easy viewing and pickle for computatinal ease
-    print(f"Saving parquet ./data/screened/{region}-screened.parquet")
-    #     pickle_file = open(f'./data/pickle_{region}.pkl', 'wb')
-    screened_path = input_path / "screened"
-    screened_path.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(screened_path / f"{region}-screened.parquet")
-    #     pickle.dump(df, pickle_file)
-    #     pickle_file.close()
-    df.to_csv(screened_path / f"{region}-screened.csv", index=False)
+    return name, df
+
+    # # Save as csv for easy viewing and pickle for computatinal ease
+    # print(f"Saving parquet ./data/screened/{region}-screened.parquet")
+    # #     pickle_file = open(f'./data/pickle_{region}.pkl', 'wb')
+    # screened_path = input_path / "screened"
+    # screened_path.mkdir(parents=True, exist_ok=True)
+    # df.to_parquet(screened_path / f"{region}-screened.parquet")
+    # #     pickle.dump(df, pickle_file)
+    # #     pickle_file.close()
+    # df.to_csv(screened_path / f"{region}-screened.csv", index=False)
 
 
 def make_anomaly_summary(df_dict):
