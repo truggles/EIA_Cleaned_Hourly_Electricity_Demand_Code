@@ -545,7 +545,7 @@ def make_anomaly_summary(df_dict):
 
         median_demand = df["demand_MW"].median()
         if median_demand > 0:
-            median_demand = median_demand.round(2)
+            median_demand = round(median_demand, 2)
         type_count["mean_demand"].append(median_demand)
 
         for TYPE in TYPEs:
