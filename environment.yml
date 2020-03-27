@@ -12,3 +12,5 @@ dependencies:
   - r-zoo=1.8_3
   - parallel=20200122
   - r-reshape2=1.4.3
+  - r-markdown=0.8
+  - r-rmarkdown=1.10
