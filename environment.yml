@@ -14,3 +14,4 @@ dependencies:
   - r-reshape2=1.4.3
   - r-markdown=0.8
   - r-rmarkdown=1.10
+  - r-lubridate=1.7.4
