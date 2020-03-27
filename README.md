@@ -26,11 +26,11 @@ The exact environment used when cleaning and imputing the EIA data is saved in t
 
 # Running the Code
 
- * Step (1): see the Jupyter notebook `get_eia_demand_data.ipynb`. You will need to acquire an API key from the EIA. Additional
-documentation is provided in the [notebook](https://github.com/truggles/EIA_Cleaned_Hourly_Electricity_Demand_Code/blob/master/get_eia_demand_data.ipynb).
- * Step (2): see the Jupyter notebook `anomaly_screening.ipynb`. For a full description of the algorithms and their motivation see the paper.
- * Step (3): see the R Markdown notebook `MICE_step.Rmd`
- * Step (4): see the Jupyter notebook `distribute_MICE_results.ipynb`. This code distributes and aggregates the results as seen in the published content [here](https://zenodo.org/record/3517197).
+ * Step (1): see the Jupyter notebook `step1_get_eia_demand_data.ipynb`. You will need to acquire an API key from the EIA. Additional
+documentation is provided in the notebook.
+ * Step (2): see the Jupyter notebook `step2_anomaly_screening.ipynb`. For a full description of the algorithms and their motivation see the paper.
+ * Step (3): see the Jupyter notebook `step3_MICE_imputation.ipynb` which is a wrapper to call the R Markdown notebook `MICE_step.Rmd`.
+ * Step (4): see the Jupyter notebook `step4_distribute_MICE_results.ipynb`. This code distributes and aggregates the results as seen in the published content [here](https://zenodo.org/record/3517197).
 
 # Completing Step (3)
 
@@ -52,13 +52,18 @@ Change line 167 to "n.imp.core = 8," and line 173 to "n.core = 2,"
 # Reproducibility
 
 To achieve exact reproducibility with the published results a user should:
- * Instead of querying EIA for data for Step (1), you will use the 10 September 2019 files used for the original analysis. Download the Zenodo repository archived [here](https://zenodo.org/record/3517197) XXX UPDATE DOI
- * Adjust the initial flags and data path in the second code cell of `anomaly_screening.ipynb` to point to the archived files and run Step (2)
+ * Instead of querying EIA for data for Step (1), you will use the files queried on 10 September 2019 used for the original analysis. Step (2) will automatically download the Zenodo repository archived [here](https://zenodo.org/record/3690240) for you
+ * Adjust the initial flags in the second code cell of `step2_anomaly_screening.ipynb`
+   * Change from `use_step1_files = True` to `use_step1_files = False`
+   * Change from `use_10sept2019_files = False` to `use_10sept2019_files = True`
+   * then run Step (2)
  * Run Step (3):
    * Running Step (3) using RStudio is probably simpler.  However, we have verified that exact reproduciblity is achieved running `MICE_step.Rmd` from the command line based on the Conda environment saved in `package-list.txt`.
    * From the command line, run: ```R -e "rmarkdown::render('MICE_step.Rmd',output_file='output.html')"```
- * Adjust the initial flags and data path in the second code cell of `distribute_MICE_results.ipynb` to point to the archived files and run Step (4)
- * Compare results
+ * Adjust the initial flags and data path in the second code cell of `step4_distribute_MICE_results.ipynb` to point to the archived files and run Step (4)
+ * Compare results against the Zenodo files downloaded automatically in Step (2).
+   * `unzip ./data/truggles-EIA_Cleaned_Hourly_Electricity_Demand_Data-1b31ad5/data/release_2019_Oct/imputation_details/imputation_study.zip -d ./original_results`
+   * `diff MICE_output/mean_impute_csv_MASTER.csv ./original_results/mean_impute_csv_MASTER.csv`
 
 Because EIA will update historical data values if a balancing authority requests this, it is possible for historical values to change altering the final results. Altered values will change the regressions performend in the MICE step leading to different imputed values for all imputed entries.
 
