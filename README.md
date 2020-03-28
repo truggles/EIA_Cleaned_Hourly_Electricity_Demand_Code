@@ -67,3 +67,14 @@ To achieve exact reproducibility with the published results a user should:
 
 Because EIA will update historical data values if a balancing authority requests this, it is possible for historical values to change altering the final results. Altered values will change the regressions performend in the MICE step leading to different imputed values for all imputed entries.
 
+# Instructions for Dave
+
+ * Installer docker on your machine: https://docs.docker.com/docker-for-mac/install/
+ * Clone the head of this branch to a new area: https://github.com/truggles/EIA_Cleaned_Hourly_Electricity_Demand_Code/tree/tmp
+ * `cd EIA_Cleaned_Hourly_Electricity_Demand_Code`
+ * Make a docker image: `docker build -t my_test .`
+ * Run the docker image (making an active docker container): `docker run -it --cpus 4 my_test bash`
+ * The Conda environment should activate when you start this up, it should say `(data_cleaning_env) root@hash:/src# `
+ * All you have to do is run `source check_reproducibility.sh` and be patient
+ * The final `diff` should be automatic.
+ * I have not been able to complete the MICE process yet, so let me know what you find.
