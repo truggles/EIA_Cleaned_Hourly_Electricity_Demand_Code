@@ -6,6 +6,7 @@ dependencies:
   - numpy=1.16.2
   - pandas=0.24.2
   - urllib3=1.24.1
+  - r-base=3.5.1
   - r-mice=3.6.0
   - r-dplyr=0.7.6
   - r-data.table=1.11.4
