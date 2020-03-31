@@ -55,7 +55,6 @@ conda-verify=3.1.1=py37_0
 contextlib2=0.5.5=py37_0
 cryptography=2.6.1=py37ha12b0ac_0
 curl=7.64.0=ha441bb4_2
-cvxpy=1.0.24=pypi_0
 cycler=0.10.0=py37_0
 cython=0.29.6=py37h0a44026_0
 cytoolz=0.9.0.1=py37h1de35cc_1
@@ -64,10 +63,8 @@ dask-core=1.1.4=py37_1
 dbus=1.13.6=h90a0687_0
 decorator=4.4.0=py37_1
 defusedxml=0.5.0=py37_1
-dill=0.2.9=pypi_0
 distributed=1.26.0=py37_1
 docutils=0.14=py37_0
-ecos=2.0.7.post1=pypi_0
 entrypoints=0.3=py37_0
 et_xmlfile=1.0.1=py37_0
 expat=2.2.6=h0a44026_0
@@ -162,7 +159,7 @@ mpfr=4.0.1=h3018a27_3
 mpmath=1.1.0=py37_0
 msgpack-python=0.6.1=py37h04f5b5a_1
 multipledispatch=0.6.0=py37_0
-multiprocess=0.70.7=pypi_0
+multiprocess=0.70.9
 navigator-updater=0.2.1=py37_0
 nbconvert=5.4.1=py37_3
 nbformat=4.4.0=py37_0
@@ -179,7 +176,6 @@ numpydoc=0.8.0=py37_0
 olefile=0.46=py37_0
 openpyxl=2.6.1=py37_1
 openssl=1.1.1d=h0b31af3_0
-osqp=0.5.0=pypi_0
 packaging=19.0=py37_0
 pandas=0.24.2=py37h0a44026_0
 pandoc=2.2.3.2=0
@@ -318,7 +314,6 @@ ruamel_yaml=0.15.46=py37h1de35cc_0
 scikit-image=0.14.2=py37h0a44026_0
 scikit-learn=0.20.3=py37h27c97d8_0
 scipy=1.2.1=py37h1410ff5_0
-scs=2.1.0=pypi_0
 seaborn=0.9.0=py37_0
 send2trash=1.5.0=py37_0
 setuptools=40.8.0=py37_0

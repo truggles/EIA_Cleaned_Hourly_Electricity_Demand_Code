@@ -16,3 +16,4 @@ dependencies:
   - r-markdown=0.8
   - r-rmarkdown=1.10
   - r-lubridate=1.7.4
+  - multiprocess=0.70.9
