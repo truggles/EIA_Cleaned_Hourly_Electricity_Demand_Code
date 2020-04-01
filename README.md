@@ -51,6 +51,12 @@ Change line 167 to "n.imp.core = 16," and line 173 to "n.core = 1,"
 Change line 167 to "n.imp.core = 8," and line 173 to "n.core = 2,"
 
 # Reproducibility
+One of the tracked files is 347MB and is stored using Git Large File Storage (LFS) instead of GitHub. To properly access this file (`data_cleaning_env_OSX_10.14.tar.gz`)
+you will need to install Git LFS: https://git-lfs.github.com/. Make sure that you run the first step in "Getting Started" too:
+ * `git lfs install`
+Now clone the repository and proceeed:
+ * `git clone git@github.com:truggles/EIA_Cleaned_Hourly_Electricity_Demand_Code.git`
+The checked out version of `data_cleaning_env_OSX_10.14.tar.gz` should be 347MB.
 
 ## Setting up the compute environment
 To achieve exact reproducibility with the published results a user will need to replicate a similar Conda computing environment
