@@ -57,6 +57,7 @@ you will need to install Git LFS: https://git-lfs.github.com/. Make sure that yo
 
 Now clone the repository and proceeed:
  * `git clone git@github.com:truggles/EIA_Cleaned_Hourly_Electricity_Demand_Code.git`
+
 The checked out version of `data_cleaning_env_OSX_10.14.tar.gz` should be 347MB.
 
 ## Setting up the compute environment
