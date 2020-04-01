@@ -1,0 +1,19 @@
+name: data_cleaning_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7.3
+  - numpy=1.16.2
+  - pandas=0.24.2
+  - urllib3=1.24.1
+  - r-base=3.5.1
+  - r-mice=3.6.0
+  - r-dplyr=0.7.6
+  - r-data.table=1.11.4
+  - r-zoo=1.8_3
+  - parallel=20200122
+  - r-reshape2=1.4.3
+  - r-markdown=0.8
+  - r-rmarkdown=1.10
+  - r-lubridate=1.7.4
+  - multiprocess=0.70.9

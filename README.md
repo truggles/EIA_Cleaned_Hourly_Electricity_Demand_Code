@@ -22,15 +22,16 @@ Steps (1), (2), and (4) are based on python code, were written in `python3.7`, a
 
 Step (3) is written in the R programming language and relies on the `mice` package
 
-The exact environment used when cleaning and imputing the EIA data is saved in the file `package-list.txt`. The environment was created and managed using Conda.
+The exact environment used when cleaning and imputing the EIA data is saved in the file `package-list.txt`. The environment was created and managed using Conda. A more sparse listing of only the high-level packages is provided in the `environment.yml` file.
+To recreate the computing environment used in the analysis see the "Reproducibility" section below.
 
 # Running the Code
 
- * Step (1): see the Jupyter notebook `get_eia_demand_data.ipynb`. You will need to acquire an API key from the EIA. Additional
-documentation is provided in the [notebook](https://github.com/truggles/EIA_Cleaned_Hourly_Electricity_Demand_Code/blob/master/get_eia_demand_data.ipynb).
- * Step (2): see the Jupyter notebook `anomaly_screening.ipynb`. For a full description of the algorithms and their motivation see the paper.
- * Step (3): see the R Markdown notebook `MICE_step.Rmd`
- * Step (4): see the Jupyter notebook `distribute_MICE_results.ipynb`. This code distributes and aggregates the results as seen in the published content [here](https://zenodo.org/record/3517197).
+ * Step (1): see the Jupyter notebook `step1_get_eia_demand_data.ipynb`. You will need to acquire an API key from the EIA. Additional
+documentation is provided in the notebook.
+ * Step (2): see the Jupyter notebook `step2_anomaly_screening.ipynb`. For a full description of the algorithms and their motivation see the paper.
+ * Step (3): see the Jupyter notebook `step3_MICE_imputation.ipynb` which is a wrapper to call the R Markdown notebook `MICE_step.Rmd`.
+ * Step (4): see the Jupyter notebook `step4_distribute_MICE_results.ipynb`. This code distributes and aggregates the results as seen in the published content [here](https://zenodo.org/record/3517197).
 
 # Completing Step (3)
 
@@ -51,14 +52,41 @@ Change line 167 to "n.imp.core = 8," and line 173 to "n.core = 2,"
 
 # Reproducibility
 
-To achieve exact reproducibility with the published results a user should:
- * Instead of querying EIA for data for Step (1), you will use the 10 September 2019 files used for the original analysis. Download the Zenodo repository archived [here](https://zenodo.org/record/3517197) XXX UPDATE DOI
- * Adjust the initial flags and data path in the second code cell of `anomaly_screening.ipynb` to point to the archived files and run Step (2)
- * Run Step (3):
-   * Running Step (3) using RStudio is probably simpler.  However, we have verified that exact reproduciblity is achieved running `MICE_step.Rmd` from the command line based on the Conda environment saved in `package-list.txt`.
-   * From the command line, run: ```R -e "rmarkdown::render('MICE_step.Rmd',output_file='output.html')"```
- * Adjust the initial flags and data path in the second code cell of `distribute_MICE_results.ipynb` to point to the archived files and run Step (4)
- * Compare results
+## Setting up the compute environment
+To achieve exact reproducibility with the published results a user will need to replicate a similar Conda computing environment
+ * The analysis was performed on Mac OSX 10.14.6
+ * Make sure Conda is installed on your machine
+ * Users with Mac OSX should be able to recreate the exact Conda computing environment used for the analysis by unpacking the Conda environment archived with Zenodo 
+   * Zenodo archive: https://zenodo.org/record/3736784 
+   * See file `data_cleaning_env_OSX_10.14.tar.gz`
+   * The versions of all packages incorporated in this environment are documented in `package-list.txt`
+ * After downloading the Conda environment archive from Zenodo, move the `data_cleaning_env_OSX_10.14.tar.gz` file to the base of this code repository
+ * To set up the environment:
 
-Because EIA will update historical data values if a balancing authority requests this, it is possible for historical values to change altering the final results. Altered values will change the regressions performend in the MICE step leading to different imputed values for all imputed entries.
+```
+mkdir data_cleaning_env
+tar -xzf data_cleaning_env_OSX_10.14.tar.gz -C data_cleaning_env
+source data_cleaning_env/bin/activate
+conda-unpack
+```
+
+ * For users without Mac OSX, we include an `environment.yml` file containing the high-level packages used in the analysis. Users can set up a computing environment with this file by executing (again Conda is required):
+
+```
+conda env create -f environment.yml
+source activate data_cleaning_env
+```
+
+## Analysis steps
+ * Instead of querying EIA for data for Step (1), you will use the files queried on 10 September 2019 used for the original analysis. Step (2) will automatically download the Zenodo repository archived [here](https://zenodo.org/record/3690240) for you
+ * There is a file `check_reproducibility.sh` that executes the steps necessary to check reproducibility
+   * To run it execute: `source check_reproducibility.sh`
+ * The `check_reproducibility.sh` script will run:
+   * Step (2) on the 10 September 2019 files
+   * Step (3) on the screened versions of these files
+   * Compare the output of Step (3) with the published results by using the `diff` function essentially running: `diff new_results.csv old_results.csv`
+
+The 10 September 2019 files must be used because EIA updates historical data values if a balancing authority requests it.
+Therefore, it is possible for historical values to change altering the final results. Altered values will
+change the regressions performend in the MICE step leading to different imputed values for all imputed entries.
 
