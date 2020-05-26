@@ -5,6 +5,15 @@ Find archived versions of this code at: [![DOI](https://zenodo.org/badge/DOI/10.
 
 Find the resulting cleaned data at: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3517196.svg)](https://doi.org/10.5281/zenodo.3517196)
 
+Full documentation of the cleaning process has been published in Scientific Data.
+
+Please consider citing:
+
+Ruggles, T.H., Farnham, D.J., Tong, D. et al. Developing reliable hourly electricity demand data through screening and imputation. Sci Data 7, 155 (2020). https://doi.org/10.1038/s41597-020-0483-x
+
+and the code archive:
+
+Ruggles, Tyler H., & Farnham, David J. (2020, April 1). EIA Cleaned Hourly Electricity Demand Code (Version v1.1). Zenodo. http://doi.org/10.5281/zenodo.3737085
 
 # Code Description
 
