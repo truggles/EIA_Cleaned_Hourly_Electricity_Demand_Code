@@ -96,9 +96,10 @@ data_pre_impute = rbind(data_pre_impute_tack_front_end,
                   dplyr::filter(original == 1) %>%
                   dplyr::arrange(BA,date_time) %>%
                   dplyr::group_by(BA) %>%
-                  dplyr::mutate(demand_lag1 = lag(value, na.rm = TRUE),
-                                demand_lead1 = lead(value, na.rm = TRUE),
-                                date_time = as.POSIXct(date_time, tryFormats = c("%Y-%m-%d %H:%M"), tz = 'UTC')) %>%
+                  dplyr::mutate(demand_lag1 = lag(value),
+                                demand_lead1 = lead(value),
+                                date_time = as.POSIXct(date_time, tryFormats = c("%Y-%m-%d %H:%M"), tz = 'UTC'),
+                                na.rm = TRUE) %>%
                   ungroup() %>%
   dplyr::select(-doy, -hour, -original)
 
