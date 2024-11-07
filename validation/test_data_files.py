@@ -32,6 +32,7 @@ def compare_files(original_dir, new_dir):
         if file in new_files:
             original_file_path = os.path.join(original_dir, file)
             new_file_path = os.path.join(new_dir, file)
+
             if filecmp.cmp(original_file_path, new_file_path, shallow=False):
                 print(f"Files are identical: {file}")
             else:
@@ -41,6 +42,8 @@ def compare_files(original_dir, new_dir):
                     new_lines = new_file.readlines()
                     # Find the first line that differs and print the original line and new line
                     for il, line in enumerate(orig_lines):
+                        if "2020-07-01 23:00:00" in line:
+                            print("Nothing until new data")
                         if line != new_lines[il]:
                             print(f"First differing line: {il}")
                             print(f"Original: {line}", f"New: {new_lines[il]}")
@@ -69,4 +72,4 @@ if __name__ == "__main__":
     compare_files(original_directory, new_directory)
 
     # Clean up the cloned repository
-    shutil.rmtree(clone_dir)
+    shutil.rmtree("*"+clone_dir+"*")

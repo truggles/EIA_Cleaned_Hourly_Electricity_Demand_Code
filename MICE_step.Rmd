@@ -23,7 +23,7 @@ csv_MASTER <- read.csv(impute_file_path)
 
 
 # we want to start on July 2nd, 2015 and end on the 1st of July of the last year
-csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) > "2015-07-01" &
+csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) > "2019-01-01" &
                                           as.Date(date_time) < paste0(year_updated, "-07-02"))
 # version used for subregions (data starts in mid-2018 instead of mid-2015)
 #csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) > "2018-09-30" &
@@ -40,7 +40,7 @@ clim_predictor_smoothing_window = 15 * floor(nrow(csv_MASTER)/365/24)
 # remove all columns that specify the catagory of the hourly demand data
 # also remove the data for the OVEC and SEC balancing authorities
 pre_imputed_data = csv_MASTER %>% dplyr::select(-contains('_category'),
-                                                -OVEC, 
+                                                # -OVEC, 
                                                 -SEC)
 
 # take the log of the hourly demand data
