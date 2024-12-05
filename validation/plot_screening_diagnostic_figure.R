@@ -6,7 +6,7 @@ library(dplyr)
 library(data.table)
 
 
-csv_file_loaction = './data/csv_MASTER.csv'
+csv_file_loaction = './data_subregions/csv_MASTER.csv'
 
 # Load data
 csv_MASTER_v12 <- read.csv(csv_file_loaction)
