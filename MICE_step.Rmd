@@ -25,11 +25,6 @@ csv_MASTER <- read.csv(impute_file_path)
 # we want to start on January 1st, 2019 and end on the 31st of December of the last year
 csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) > "2018-12-31" &
                                           as.Date(date_time) < paste0(year_updated, "-01-01"))
-# version used for subregions (data starts in mid-2018 instead of mid-2015)
-#csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) > "2018-09-30" &
-#                                          as.Date(date_time) < paste0(year_updated, "-10-01"))
-
-
 
 
 # we want the smoothing window to be 15 x the number of years of data
