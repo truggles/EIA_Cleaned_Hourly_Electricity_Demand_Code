@@ -15,7 +15,7 @@ library(reshape2)
 
 impute_file_path = paste0("data/csv_MASTER.csv")
 
-year_updated = 2024
+year_updated = 2025
 
 
 # load the input file
@@ -23,7 +23,7 @@ csv_MASTER <- read.csv(impute_file_path)
 
 
 # we want to start on January 1st, 2019 and end on the 31st of December of the last year
-csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) > "2018-12-31" &
+csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) >= "2020-01-01" &
                                           as.Date(date_time) < paste0(year_updated, "-01-01"))
 
 
@@ -33,9 +33,8 @@ clim_predictor_smoothing_window = 15 * floor(nrow(csv_MASTER)/365/24)
 
 
 # remove all columns that specify the catagory of the hourly demand data
-# also remove the data for the OVEC and SEC balancing authorities
+# also remove the data for the SEC balancing authority because it has many problematic data points
 pre_imputed_data = csv_MASTER %>% dplyr::select(-contains('_category'),
-                                                # -OVEC, 
                                                 -SEC)
 
 # take the log of the hourly demand data
