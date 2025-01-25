@@ -35,7 +35,7 @@ full_plot <- ggplot(demand_data %>% filter(demand_category != 'OKAY')) +
   labs(x = 'Date') +
   scale_x_datetime(date_labels = '%Y-%m-%d',
                    breaks = seq.POSIXt(from = as.POSIXct("2019-01-01"), 
-                                       to = as.POSIXct("2024-01-01"), 
+                                       to = as.POSIXct("2025-01-01"), 
                                        by = "1 months")) +
   theme_bw() +
   theme(legend.position = "bottom",
