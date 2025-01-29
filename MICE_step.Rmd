@@ -22,7 +22,7 @@ year_updated = 2025
 csv_MASTER <- read.csv(impute_file_path)
 
 
-# we want to start on January 1st, 2019 and end on the 31st of December of the last year
+# we want to start on January 1st, 2020 and end on the 31st of December of the last year
 csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) >= "2020-01-01" &
                                           as.Date(date_time) < paste0(year_updated, "-01-01"))
 
