@@ -13,23 +13,18 @@ library(parallel)
 library(reshape2)
 
 
-impute_file_path = paste0("data/csv_MASTER.csv")
+impute_file_path = paste0("data_subregions/csv_MASTER.csv")
 
-year_updated = 2020
+year_updated = 2025
 
 
 # load the input file
 csv_MASTER <- read.csv(impute_file_path)
 
 
-# we want to start on July 2nd, 2015 and end on the 1st of July of the last year
-csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) > "2015-07-01" &
-                                          as.Date(date_time) < paste0(year_updated, "-07-02"))
-# version used for subregions (data starts in mid-2018 instead of mid-2015)
-#csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) > "2018-09-30" &
-#                                          as.Date(date_time) < paste0(year_updated, "-10-01"))
-
-
+# we want to start on January 1st, 2020 and end on the 31st of December of the last year
+csv_MASTER = csv_MASTER %>% dplyr::filter(as.Date(date_time) >= "2020-01-01" &
+                                          as.Date(date_time) < paste0(year_updated, "-01-01"))
 
 
 # we want the smoothing window to be 15 x the number of years of data
@@ -38,9 +33,8 @@ clim_predictor_smoothing_window = 15 * floor(nrow(csv_MASTER)/365/24)
 
 
 # remove all columns that specify the catagory of the hourly demand data
-# also remove the data for the OVEC and SEC balancing authorities
+# also remove the data for the SEC balancing authority because it has many problematic data points
 pre_imputed_data = csv_MASTER %>% dplyr::select(-contains('_category'),
-                                                -OVEC, 
                                                 -SEC)
 
 # take the log of the hourly demand data
@@ -96,9 +90,10 @@ data_pre_impute = rbind(data_pre_impute_tack_front_end,
                   dplyr::filter(original == 1) %>%
                   dplyr::arrange(BA,date_time) %>%
                   dplyr::group_by(BA) %>%
-                  dplyr::mutate(demand_lag1 = lag(value, na.rm = TRUE),
-                                demand_lead1 = lead(value, na.rm = TRUE),
-                                date_time = as.POSIXct(date_time, tryFormats = c("%Y-%m-%d %H:%M"), tz = 'UTC')) %>%
+                  dplyr::mutate(demand_lag1 = lag(value),
+                                demand_lead1 = lead(value),
+                                date_time = as.POSIXct(date_time, tryFormats = c("%Y-%m-%d %H:%M"), tz = 'UTC'),
+                                na.rm = TRUE) %>%
                   ungroup() %>%
   dplyr::select(-doy, -hour, -original)
 
